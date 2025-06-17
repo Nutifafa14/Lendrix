@@ -28,7 +28,7 @@ export default function MyRegisterScreen({ navigation }) {
     <View style={styles.container}>
       <View style={styles.content}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={30} color="black" bottom={-30} />
+          <Ionicons name="arrow-back" size={30} color="black" bottom={-10} />
         </TouchableOpacity>
 
         <Text style={styles.title}>Enter your email address</Text>
@@ -107,13 +107,13 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 24,
     marginTop: 24,
-    bottom:-30
+    bottom:20
   },
 
   label: {
     fontSize: 16,
     color: "#555",
-    bottom: -38,
+    bottom: 10,
   },
 
   input: {
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     paddingVertical: 10,
     borderRadius: 20,
-    bottom: -50,
+    bottom: -40,
   },
 
   inputError: {
@@ -137,11 +137,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 12,
+    bottom: -40,
   },
 
   errorText: {
     color: "red",
     fontSize: 12,
+    bottom: -1,
   },
 
   footer: {

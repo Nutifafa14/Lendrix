@@ -6,8 +6,18 @@ const TwoStepVeriScreen = ({ navigation }) => {
   const phoneNumber = '**6071';
 
   const handleOptionPress = (option) => {
-    console.log(`${option} selected`);
-    // You can add navigation or logic here
+    if (option === 'text') {
+      navigation.navigate('CodeByTextScreen');
+    } else {
+      console.log(`${option} selected`);
+      // You can add navigation or logic here for other options
+    }
+    if (option === 'whatsapp') {
+      navigation.navigate('WhatsappCodeScreen');
+    } else {
+      console.log(`${option} selected`);
+      // You can add navigation or logic here for other options
+    }
   };
 
   return (
@@ -19,40 +29,32 @@ const TwoStepVeriScreen = ({ navigation }) => {
       <Text style={styles.title}>Choose a 2-step{'\n'}verification method</Text>
 
       <Text style={styles.subtitle}>
-        For text, voice call and WhatsApp, we’ll use{'\n'}
-        your primary phone number <Text style={{ fontWeight: 'bold' }}>{phoneNumber}</Text>
+        For text, we’ll use your primary phone number <Text style={{ fontWeight: 'bold' }}>{phoneNumber}</Text>
       </Text>
 
       <TouchableOpacity style={styles.option} onPress={() => handleOptionPress('text')}>
-        <MaterialIcons name="textsms" size={24} color="#000" />
+        <MaterialIcons name="textsms" size={30} color="#007aff" />
         <Text style={styles.optionText}>Receive code by text</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.option} onPress={() => handleOptionPress('call')}>
-        <Ionicons name="call-outline" size={24} color="#000" />
-        <Text style={styles.optionText}>Receive code by voice call</Text>
-      </TouchableOpacity>
+      
 
-      <TouchableOpacity style={styles.option} onPress={() => handleOptionPress('whatsapp')}>
-        <FontAwesome name="whatsapp" size={24} color="#000" />
-        <Text style={styles.optionText}>Receive code by WhatsApp</Text>
-      </TouchableOpacity>
 
       <TouchableOpacity style={styles.option} onPress={() => handleOptionPress('app')}>
-        <Ionicons name="notifications-outline" size={24} color="#000" />
+        <Ionicons name="notifications-outline" size={30} color="blue" />
         <Text style={styles.optionText}>Resend Lendrix app notification</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => Linking.openURL('#')}>
-        <Text style={styles.link}>I don’t have any of these</Text>
-      </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate('ConfirmIdentityScreen')}>
+  <Text style={styles.link}>I don’t have any of these</Text>
+</TouchableOpacity>
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    padding: 24,
+    padding: 15,
     backgroundColor: '#fff',
     flexGrow: 1,
   },
@@ -61,30 +63,30 @@ const styles = StyleSheet.create({
     marginBottom: 19,
     bottom: 8,
     marginTop: 20,
-    bottom: -20,
+    bottom: 10,
   },
   title: {
     fontSize: 22,
     fontWeight: 'bold',
     marginBottom: 15,
-    lineHeight: 30,
-    bottom : -30
+    lineHeight: 25,
+    bottom : -10
   },
   subtitle: {
     fontSize: 15,
     color: '#444',
     marginBottom: 20,
     lineHeight: 22,
-    bottom: -50,
+    bottom: -20,
   },
   option: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
-    paddingVertical: 40,
+    paddingVertical: 30,
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
-    bottom: -30
+    bottom: -10
   },
   optionText: {
     fontSize: 16,
@@ -92,9 +94,9 @@ const styles = StyleSheet.create({
   link: {
     marginTop: 100,
     color: '#007aff',
-    fontSize: 15,
+    fontSize: 20,
     textAlign: 'center',
-
+   bottom: 40,
   },
 });
 

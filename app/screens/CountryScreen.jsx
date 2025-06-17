@@ -11,7 +11,7 @@ const CountryScreen = () => {
   const [showPicker, setShowPicker] = useState(false);
   const [showError, setShowError] = useState(false);
   const handleNext = () => {
-  if (!country) {
+  if (!country) { 
     setShowError(true);
     return;
   }
@@ -23,7 +23,7 @@ const CountryScreen = () => {
     <View style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name='arrow-back' size={30} color="black" />
+          <Ionicons name='arrow-back' size={30} color="black"  />
         </TouchableOpacity>
       </View>
       <View style={styles.content}>
@@ -92,7 +92,8 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 20, // Space below the back arrow
+    marginBottom: 20, 
+    bottom: 20, // Space below the header
   },
   content: {
     flex: 1, // Allows content to take up available space
@@ -102,7 +103,8 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: 'bold',
     marginBottom: 30, // Space below the title
-    color: '#333', // Dark text color
+    color: '#333',
+    bottom: 10 
   },
   errorText: {
   color: 'red',

@@ -63,11 +63,12 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
   close: {
-    fontSize: 30,
+    fontSize: 25,
     backgroundColor: '#f2f2f2',
     paddingHorizontal: 12,
     paddingVertical: 4,
     borderRadius: 20,
+    bottom: -20,
   },
   imageContainer: {
     alignItems: 'center',
@@ -80,6 +81,7 @@ const styles = StyleSheet.create({
   textContainer: {
     alignItems: 'center',
     paddingHorizontal: 10,
+    bottom: 50,
   },
   title: {
     fontSize: 18,
@@ -102,16 +104,17 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     alignItems: 'center',
   },
-  button: {
-    backgroundColor: '#69DDF1',
-    paddingVertical: 14,
-    paddingHorizontal: 40,
+ button: {
+    backgroundColor: "#69DDF1",
     borderRadius: 30,
-    shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowOffset: { width: 10, height: 2 },
-    shadowRadius: 4,
-    elevation: 3,
+    paddingVertical: 16,
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+    position: "absolute",
+    bottom: 70,
+    left: 5,
+    right: 20,
   },
   buttonText: {
     fontSize: 16,

@@ -107,12 +107,12 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: '700',
     marginBottom: 10,
-    bottom: -10
+    bottom: 10
   },
   subtitle: {
     color: '#6B7280',
     marginBottom: 50,
-    bottom: -25,
+    bottom: 10,
   },
   inputRow: {
     flexDirection: 'row',
@@ -122,9 +122,11 @@ const styles = StyleSheet.create({
   codeContainer: {
     marginRight: 10,
     width: 70,
+    bottom: 40,
   },
   numberContainer: {
     flex: 1,
+    bottom: 40,
   },
   label: {
     color: '#6B7280',

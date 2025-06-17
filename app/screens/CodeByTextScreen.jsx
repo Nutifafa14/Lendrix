@@ -1,17 +1,20 @@
 import React, { useRef, useState } from 'react';
 import {
   View, Text, TextInput, StyleSheet,
-  TouchableOpacity, KeyboardAvoidingView, Platform
+  TouchableOpacity, KeyboardAvoidingView, Platform,
+  TouchableWithoutFeedback, Keyboard 
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 const CODE_LENGTH = 6;
 
-const SmsScreen = ({ navigation }) => {
+const CodeByTextScreen = ({ navigation }) => {
   const [code, setCode] = useState(new Array(CODE_LENGTH).fill(''));
   const [isDoneEnabled, setIsDoneEnabled] = useState(false);
 
   const inputs = useRef([]);
+  // Example phone number, replace with actual user number as needed
+  const phoneNumber = '0801234908';
 
   const handleChange = (text, index) => {
     if (!/^\d*$/.test(text)) return;
@@ -26,7 +29,7 @@ const SmsScreen = ({ navigation }) => {
     }
 
     // Enable Done button
-    setIsDoneEnabled(newCode.join('').replace(/\s/g, '').length > 0);
+    setIsDoneEnabled(newCode.join('').replace(/\s/g, '').length === CODE_LENGTH);
   };
 
   const handleKeyPress = (e, index) => {
@@ -35,15 +38,24 @@ const SmsScreen = ({ navigation }) => {
     }
   };
 
-  const handleDone = () => {
-    navigation.navigate('PasswordScreen');
-  };
-
   const handleBack = () => {
     navigation.goBack();
   };
 
-  return (
+  const handleDone = () => {
+    // Add your code verification logic here
+    // Example: navigation.navigate('NextScreen');
+    alert('Code submitted: ' + code.join(''));
+  };
+
+  // Mask phone number: show ****** and last 3 digits
+  const getMaskedNumber = () => {
+    if (!phoneNumber || phoneNumber.length < 3) return '';
+    return '******' + phoneNumber.slice(-3);
+  };
+
+ return (
+  <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -51,15 +63,14 @@ const SmsScreen = ({ navigation }) => {
       {/* Top row */}
       <View style={styles.topBar}>
         <TouchableOpacity onPress={handleBack}>
-          <Ionicons name="arrow-back" size={35} color="black" />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.helpButton}>
-          <Text style={styles.helpText}>Help</Text>
+          <Ionicons name="arrow-back" size={35} color="black" bottom={20} />
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.title}>We just sent you an SMS</Text>
-      <Text style={styles.subTitle}>Enter the security code we sent to{'\n'}*1234</Text>
+      <Text style={styles.title} bottom={20}>We just sent you a code</Text>
+      <Text style={styles.subtitle}>
+        To log in, enter the security code we sent to you {getMaskedNumber() && `on ${getMaskedNumber()}`}. It will expire in 5 minutes
+      </Text>
 
       {/* Code boxes */}
       <View style={styles.codeContainer}>
@@ -78,30 +89,29 @@ const SmsScreen = ({ navigation }) => {
           />
         ))}
       </View>
-
-      <TouchableOpacity>
-        <Text style={styles.resend}>Didn't receive a code?</Text>
+<TouchableOpacity>
+        <Text style={styles.resend}>Try another way</Text>
       </TouchableOpacity>
 
       {/* Done button */}
       <TouchableOpacity
-        style={[styles.doneButton, isDoneEnabled ? styles.buttonEnabled : styles.buttonDisabled]}
+        style={[styles.ContinueButton, isDoneEnabled ? styles.buttonEnabled : styles.buttonDisabled]}
         disabled={!isDoneEnabled}
         onPress={handleDone}
       >
-        <Text style={styles.doneText}>Done</Text>
+        <Text style={styles.ContinueText}>Continue</Text>
       </TouchableOpacity>
     </KeyboardAvoidingView>
-  );
+  </TouchableWithoutFeedback>
+);
 };
 
-export default SmsScreen;
-
+export default CodeByTextScreen;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 24,
+    paddingHorizontal: 22,
     paddingTop: 60,
     backgroundColor: '#fff',
   },
@@ -109,14 +119,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginLeft: -5,
     bottom: 20,
-   
   },
   helpButton: {
     backgroundColor: '#69DDF1',
-    paddingHorizontal: 20, // increased from 10
-    paddingVertical: 12,   // increased from 5
-    borderRadius: 25,      // slightly larger for a bigger button
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 25,
     flexDirection: 'row-reverse',
     bottom: 10,
     marginRight: 10,
@@ -128,14 +138,17 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 30,
     fontWeight: 'bold',
-    marginTop: 32,
+    marginTop: 30,
     textAlign: 'center',
     color: '#000',
+    botttom: 20,
+    
   },
-  subTitle: {
+  subtitle: {
     textAlign: 'center',
     marginVertical: 12,
     color: '#666',
+    fontSize: 16,
   },
   codeContainer: {
     flexDirection: 'row',
@@ -144,16 +157,16 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   codeBox: {
-  width: 48,
-  height: 56,
-  borderWidth: 2,
-  borderColor: '#ccc',
-  borderRadius: 8,
-  fontSize: 24,
-  color: '#000',
-  textAlign: 'center',           // Center horizontally
-  textAlignVertical: 'center',   // Center vertically (Android)
-  padding: 0, 
+    width: 48,
+    height: 56,
+    borderWidth: 2,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    fontSize: 24,
+    color: '#000',
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    padding: 0,
   },
   activeBox: {
     borderColor: '#4f46e5',
@@ -163,12 +176,13 @@ const styles = StyleSheet.create({
     color: '#1e3a8a',
     textDecorationLine: 'underline',
     marginBottom: 30,
+    fontSize: 16,
   },
-  doneButton: {
+  ContinueButton: {
     alignItems: 'center',
     paddingVertical: 14,
     borderRadius: 30,
-    bottom: -300,
+    bottom: -200,
   },
   buttonEnabled: {
     backgroundColor: '#69DDF1',
@@ -176,7 +190,7 @@ const styles = StyleSheet.create({
   buttonDisabled: {
     backgroundColor: '#e2e8f0',
   },
-  doneText: {
+  ContinueText: {
     fontSize: 16,
     fontWeight: '600',
     color: '#000',

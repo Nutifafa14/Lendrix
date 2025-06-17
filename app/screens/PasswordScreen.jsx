@@ -105,7 +105,7 @@ container: {
     fontWeight: 'bold',
     marginBottom: 30,
     color: '#333',
-    bottom: -20, // Space below the title
+    bottom: 30, // Space below the title
   },
   label: {
     fontSize: 16,

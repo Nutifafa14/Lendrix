@@ -68,11 +68,9 @@ const styles = StyleSheet.create({
     bottom: -20,
   },
   iconImage: {
-    width: 150,
-    height: 150,
-    marginTop: 50,
-    marginBottom: 18,
-    
+    width: '100%',
+    height: 250,
+    marginTop: 60,
   },
   title: {
     fontSize: 22,
@@ -127,9 +125,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     width: "100%",
     position: "absolute",
-    bottom: 100,
-    left: 20,
-    right: 20,
+    bottom: -30,
+    left: 10,
+    right: 10,
   },
   continueText: {
     color: "#000",

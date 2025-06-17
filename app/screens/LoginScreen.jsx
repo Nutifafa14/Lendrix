@@ -22,12 +22,11 @@ export default function LoginScreen({ navigation }) {
       return;
     }
     console.log('Email:', email, 'Password:', password);
-    navigation.navigate('TwoStepVeriScreen');
+    navigation.navigate('VerifyDeviceScreen');
   };
 
   const handleTroubleLogin = () => {
-    Alert.alert('Forgot Password', 'Redirecting to password recovery screen...');
-    // navigation.navigate('ForgotPassword');
+     navigation.navigate('ForgottenPasswordScreen');
   };
 
   const handleGoogleLogin = () => {
@@ -48,7 +47,7 @@ export default function LoginScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
        <TouchableOpacity onPress={() => navigation.goBack()}>
-             <Ionicons name='arrow-back' size={30} color="black" bottom ={-20}/>
+             <Ionicons name='arrow-back' size={30} color="black" bottom={-30} />
              </TouchableOpacity>
       <View style={styles.formContainer}>
         <Text style={styles.title}>Log In</Text>
@@ -138,9 +137,9 @@ const styles = StyleSheet.create({
     marginTop: 60,
   },
   title: {
-    fontSize: 28,
+    fontSize: 30,
     fontWeight: 'bold',
-    marginBottom: 30,
+    marginBottom: 40,
     textAlign: 'center',
     bottom: 100,
   },
@@ -163,7 +162,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 15,
     padding: 5,
-    bottom: 55,
+    bottom: 11,
   },
   loginButton: {
     backgroundColor: '#69DDF1',
@@ -171,7 +170,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     alignItems: 'center',
     marginBottom: 10,
-    bottom: 30,
+    bottom: -30,
   },
   loginButtonText: {
     color: '#000',
@@ -183,7 +182,7 @@ const styles = StyleSheet.create({
     color: '#007AFF',
     textDecorationLine: 'underline',
     marginTop: 5,
-    bottom: -80,
+    bottom: -50,
   },
   bottomContainer: {
     marginBottom: 30,
@@ -224,10 +223,12 @@ const styles = StyleSheet.create({
   registerText: {
     fontSize: 14,
     color: '#666',
+    bottom : 80
   },
   registerLink: {
     fontSize: 14,
     color: '#007AFF',
     fontWeight: '500',
+    bottom: 80,
   },
 });

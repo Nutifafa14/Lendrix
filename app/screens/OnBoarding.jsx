@@ -347,6 +347,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#999',
     fontStyle: 'italic',
+    bottom: 10
   },
   bottomContainer: {
     paddingHorizontal: 20,
@@ -357,7 +358,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 40,
-    color:'#69DDF1'
+    color:'#69DDF1',
+    bottom: -20
 
   },
   progressDot: {

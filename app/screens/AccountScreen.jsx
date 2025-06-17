@@ -10,7 +10,7 @@ const navigation = useNavigation();
 return(
     <View style ={styles.container}>
        <TouchableOpacity onPress={() => navigation.goBack()}>
-       <Ionicons name='arrow-back' size={30} color="black" bottom ={ -20}/>
+       <Ionicons name='arrow-back' size={30} color="black" bottom ={ -10}/>
        </TouchableOpacity>
 
 
@@ -19,7 +19,7 @@ return(
       <TouchableOpacity style={styles.option} 
        onPress={() => navigation.navigate('CountryScreen')}
       >
-      <FontAwesome5 name="user" size={24} color="black" style={styles.icon}/>
+      <FontAwesome5 name="user" size={40} color="green" bottom ={10} style={styles.icon}/>
       <View style={styles.textBox}>
         <Text style={styles.optionTitle}> Personal Account</Text>
         <Text style={styles.optionDesc}>Send,spend and receive money around the world for less. </Text>
@@ -28,7 +28,7 @@ return(
       </TouchableOpacity>
 
      <TouchableOpacity style={styles.option}>
-      <FontAwesome5 name="briefcase" size={24} color="black" style={styles.icon}/>
+      <FontAwesome5 name="briefcase" size={40} color="green"  bottom ={10} style={styles.icon}/>
       <View style={styles.textBox}>
         <Text style={styles.optionTitle}> Business Account</Text>
         <Text style={styles.optionDesc}>Do business or freelance work internationally </Text>
@@ -68,14 +68,14 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 16,
     marginVertical: 8,
-    bottom:'-100'
+    bottom:-50
   },
   icon: {
     marginRight: 12,
   },
   textBox: {
     flex: 1,
-    bottom: 'auto'
+    bottom: -10
   },
   optionTitle: {
     fontSize: 16,

@@ -16,7 +16,7 @@ const LoadingScreen = ({ navigation }) => { // Accept navigation prop
 
   return (
     <LinearGradient
-      colors={['#69DDF1', '#F8FF50']}
+      colors={['#69DDF1', '#75EAFE']}
       style={styles.container}
     >
       <ActivityIndicator size="large" color="#000" style={styles.loader} />

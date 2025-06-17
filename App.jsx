@@ -20,10 +20,23 @@ import AdTrackingScreen from './app/screens/AdTrackingScreen';
 import OnBoardingIllustration from './app/screens/OnBoardingIllustration';
 import MyRegisterScreen from './app/screens/MyRegisterScreen';
 import TwoStepVeriScreen from './app/screens/TwoStepVeriScreen';
+import CodeByTextScreen from './app/screens/CodeByTextScreen';
+import ForgottenPasswordScreen from './app/screens/ForgottenPaswordScreen'; // Adjust the path if necessary
+import VerifyDeviceScreen from './app/screens/VerifyDeviceScreen'; // Adjust the path if necessary
+import ConfirmIdentityScreen from './app/screens/ConfirmIdentityScreen';
+import ChangeNumberScreen from './app/screens/ChangeNumberScreen'; // Adjust the path if necessary
+import HelpChangeNumberScreen from './app/screens/HelpChangeNumberScreen';
+import TalkToTeam1Screen from './app/screens/TalkToTeam1Screen';
+import NeedHelpPhoneScreen from './app/screens/NeedHelpPhoneScreen';
+import ResetPasswordScreen from './app/screens/ResetPasswordScreen';
+import ResetPasswordEmailScreen from './app/screens/ResetPasswordEmailScreen';
 const Stack = createStackNavigator();
 
 function App() {
   return (
+
+   
+
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Splash" screenOptions={{headerShown:false}}>
         <Stack.Screen
@@ -39,9 +52,50 @@ function App() {
           name="OnBoardingIllustration" 
            component={OnBoardingIllustration}
        />
+         <Stack.Screen 
+          name="TalkToTeam1Screen"
+           component={TalkToTeam1Screen}
+       />
+        <Stack.Screen
+          name="ResetPasswordEmailScreen"
+          component={ResetPasswordEmailScreen}
+       />
+       <Stack.Screen 
+          name="ForgottenPasswordScreen"
+           component={ForgottenPasswordScreen} 
+       />
+       <Stack.Screen 
+          name="NeedHelpPhoneScreen"
+           component={NeedHelpPhoneScreen}
+       />
+       <Stack.Screen
+          name="ResetPasswordScreen"
+           component={ResetPasswordScreen}
+       />
+       <Stack.Screen 
+          name="VerifyDeviceScreen"
+           component={VerifyDeviceScreen}
+       />
        <Stack.Screen 
           name="TwoStepVeriScreen" 
            component={TwoStepVeriScreen}
+       />
+       <Stack.Screen 
+          name="HelpChangeNumberScreen" 
+           component={HelpChangeNumberScreen}
+       />
+       <Stack.Screen 
+          name="ChangeNumberScreen" 
+           component={ChangeNumberScreen}
+       />
+       <Stack.Screen 
+          name="CodeByTextScreen" 
+           component={CodeByTextScreen}
+       />
+       
+       <Stack.Screen 
+          name="ConfirmIdentityScreen" 
+           component={ConfirmIdentityScreen}
        />
        <Stack.Screen 
           name="CommScreen" 
