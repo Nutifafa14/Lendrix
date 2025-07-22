@@ -1,15 +1,16 @@
 import React from 'react';
 import {
-  View, Text, StyleSheet, ScrollView, Pressable, TouchableOpacity
+  View, Text, StyleSheet, Pressable, TouchableOpacity
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import ScreenWrapper from '../components/ScreenWrapper';
 
 const ForgottenPasswordScreen = () => {
   const navigation = useNavigation();
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScreenWrapper>
       {/* Back Button */}
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
         <Ionicons name="arrow-back" size={24} color="#000" />
@@ -49,15 +50,12 @@ const ForgottenPasswordScreen = () => {
       </View>
 
       {/* Reset Password Button */}
-      <Pressable style={styles.resetButton} onPress={() => {/* handle reset password */}}>
+      <Pressable style={styles.resetButton} onPress={() => {/* handle reset */}}>
         <Text style={styles.resetButtonText}>Reset password</Text>
       </Pressable>
 
-      {/* Help Link */}
-      <TouchableOpacity onPress={() => {navigation.navigate('TalkToTeam1Screen');}}>
-        <Text style={styles.helpLink}>I still need help</Text>
-      </TouchableOpacity>
-    </ScrollView>
+      
+    </ScreenWrapper>
   );
 };
 
@@ -67,7 +65,6 @@ const styles = StyleSheet.create({
   container: {
     padding: 24,
     backgroundColor: '#fff',
-    flexGrow: 1,
   },
   backButton: {
     marginBottom: 16,
@@ -100,7 +97,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-start',
     marginBottom: 15,
-
   },
   bullet: {
     fontSize: 18,
@@ -120,12 +116,12 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     alignItems: 'center',
     marginBottom: 16,
+    marginTop: 40,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.15,
     shadowRadius: 4,
     elevation: 5,
-    bottom: -250
   },
   resetButtonText: {
     color: '#000',
@@ -139,6 +135,5 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
     fontWeight: '500',
     marginTop: 4,
-    bottom: -250,
   },
 });

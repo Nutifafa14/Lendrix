@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, Text, Image, TouchableOpacity, Pressable, StyleSheet, Linking } from 'react-native';
+import { View, Text, Image, TouchableOpacity, Pressable, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import ScreenWrapper from '../components/ScreenWrapper';
 
 export default function ResetPasswordEmailScreen() {
   const navigation = useNavigation();
@@ -9,37 +10,29 @@ export default function ResetPasswordEmailScreen() {
   const email = route.params?.email || 'your@email.com'; // fallback if no email passed
 
   return (
-    <View style={styles.container}>
-      
+    <ScreenWrapper>
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
         <Ionicons name="arrow-back" size={24} color="#000" />
       </TouchableOpacity>
 
-      
       <Image
-        source={require('../assets/Group_15.png')} 
+        source={require('../assets/Group_15.png')}
         style={styles.image}
         resizeMode="contain"
       />
 
-     
       <Text style={styles.title}>CHECK YOUR{'\n'}EMAIL</Text>
 
-      
       <Text style={styles.description}>
         We sent an email to{'\n'}
         <Text style={styles.email}>{email}</Text>. If you don’t get the email soon, check your spam folder.
         {'\n'}Still need help?
       </Text>
 
-      
-     
-
-      
       <Pressable style={styles.loginButton} onPress={() => navigation.navigate('LoginScreen')}>
         <Text style={styles.loginButtonText}>Back to login</Text>
       </Pressable>
-    </View>
+    </ScreenWrapper>
   );
 }
 
@@ -86,7 +79,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#000',
   },
-  
   loginButton: {
     backgroundColor: '#7DEFFF',
     borderRadius: 30,

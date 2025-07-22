@@ -10,7 +10,7 @@ const navigation = useNavigation();
 return(
     <View style ={styles.container}>
        <TouchableOpacity onPress={() => navigation.goBack()}>
-       <Ionicons name='arrow-back' size={30} color="black" bottom ={ -10}/>
+       <Ionicons name='arrow-back' size={30} color="#000" bottom ={ -10}/>
        </TouchableOpacity>
 
 
@@ -19,21 +19,21 @@ return(
       <TouchableOpacity style={styles.option} 
        onPress={() => navigation.navigate('CountryScreen')}
       >
-      <FontAwesome5 name="user" size={40} color="green" bottom ={10} style={styles.icon}/>
+      <FontAwesome5 name="user" size={40} color="#69DDF1" bottom ={10} style={styles.icon}/>
       <View style={styles.textBox}>
         <Text style={styles.optionTitle}> Personal Account</Text>
         <Text style={styles.optionDesc}>Send,spend and receive money around the world for less. </Text>
       </View>
-      <Ionicons name='chevron-forward' size={20} color="black"/>
+      <Ionicons name='chevron-forward' size={20} color="#000"/>
       </TouchableOpacity>
 
      <TouchableOpacity style={styles.option}>
-      <FontAwesome5 name="briefcase" size={40} color="green"  bottom ={10} style={styles.icon}/>
+      <FontAwesome5 name="briefcase" size={40} color="#69DDF1"  bottom ={10} style={styles.icon}/>
       <View style={styles.textBox}>
         <Text style={styles.optionTitle}> Business Account</Text>
         <Text style={styles.optionDesc}>Do business or freelance work internationally </Text>
       </View>
-      <Ionicons name='chevron-forward' size={20} color="black"/>
+      <Ionicons name='chevron-forward' size={20} color="#000"/>
       </TouchableOpacity>
 
     </View>
@@ -47,6 +47,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 22,
     backgroundColor: 'white',
+    bottom: 0,
     
   },
   title: {

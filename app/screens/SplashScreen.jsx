@@ -1,6 +1,6 @@
 import React,{useEffect} from "react";
 import { View,Image,StyleSheet,StatusBar }  from "react-native";
-
+import ScreenWrapper from '../components/ScreenWrapper';
 const SplashScreen =({navigation}) =>{
     useEffect(() =>{
         const timer = setTimeout(() =>{

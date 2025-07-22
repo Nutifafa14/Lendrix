@@ -2,15 +2,16 @@ import React from 'react';
 import { View, Text, Image, Pressable, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
+import ScreenWrapper from '../components/ScreenWrapper';
 
 export default function VerifyDeviceScreen() {
   const navigation = useNavigation();
 
   return (
-    <View style={styles.container}>
+    <ScreenWrapper>
       {/* Close Icon */}
       <Pressable onPress={() => navigation.goBack()} style={styles.closeButton}>
-        <Ionicons name="close" size={24} color="#000" />
+        <Ionicons name="close" size={30} color="#000" />
       </Pressable>
 
       {/* Illustration */}
@@ -32,22 +33,15 @@ export default function VerifyDeviceScreen() {
       <Pressable style={styles.button} onPress={() => navigation.navigate('TwoStepVeriScreen')}>
         <Text style={styles.buttonText}>Verify another way</Text>
       </Pressable>
-    </View>
+    </ScreenWrapper>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    justifyContent: 'center',
-    backgroundColor: '#fff',
-    alignItems: 'center',
-  },
   closeButton: {
-    position: 'absolute',
-    top: 50,
-    left: 20,
+    alignSelf: 'flex-start',
+    marginTop: 10,
+    marginBottom: 20,
   },
   image: {
     width: '90%',
@@ -73,10 +67,13 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 30,
     alignItems: 'center',
-    marginBottom: 10,
     width: '80%',
     shadowColor: '#000',
-    bottom: -80,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    elevation: 4,
+    alignSelf: 'center',
   },
   buttonText: {
     fontSize: 16,

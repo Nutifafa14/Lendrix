@@ -1,126 +1,136 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import ScreenWrapper from '../components/ScreenWrapper';
 
 const EmailVeriScreen = ({ navigation, route }) => {
   const email = route?.params?.email || 'your email';
+  const userId = '6481'; // Updated user id for verification
 
-  const handleVerifyEmail = () => {
-    // Logic to verify email goes here
-    navigation.navigate('LoadingScreen');
+  const handleVerifyEmail = async () => {
+    try {
+      const response = await fetch(`http://10.132.134.92:3000/users/${userId}`);
+      if (!response.ok) throw new Error('User not found');
+      const user = await response.json();
+      if (user.verified) {
+        navigation.navigate('LoadingScreen');
+      } else {
+        alert('Email not verified yet. Please check your inbox.');
+      }
+    } catch (error) {
+      alert('Failed to check verification status.');
+    }
   };
 
   return (
-    <View style={styles.background}>
-      <TouchableOpacity
-        style={styles.header}
-        onPress={() => navigation.goBack()}>
-        <Ionicons name='arrow-back' size={30} color="black"/>
-      </TouchableOpacity>
-
-      <View style={styles.iconContainer}>
-        <Image
-          source={require('../assets/Group_11.png')} // <-- update this path to your actual icon filename
-          style={styles.icon}
-          resizeMode="contain"
-        />
-      </View>
-
+    <ScreenWrapper>
       <View style={styles.container}>
-        <Text style={styles.title}>Verify Your Email</Text>
-        <Text style={styles.description}>
-          A verification link has been sent to:
-        </Text>
-        <Text style={styles.email}>{email}</Text>
-        <Text style={styles.description2}>
-          Please check your inbox and click the link to verify your email address.
-        </Text>
-        <TouchableOpacity style={styles.button} onPress={handleVerifyEmail}>
-          <Text style={styles.buttonText}>Verify Email</Text>
+        {/* Back Button */}
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+          <Ionicons name='arrow-back' size={30} color="black" />
         </TouchableOpacity>
+
+        <View style={styles.contentContainer}>
+          {/* Icon Image */}
+          <View style={styles.iconContainer}>
+            <Image
+              source={require('../assets/Group_11.png')}
+              style={styles.icon}
+              resizeMode="contain"
+            />
+          </View>
+
+          {/* Text Content */}
+          <View style={styles.textContainer}>
+            <Text style={styles.title}>Verify Your Email</Text>
+            <Text style={styles.description}>A verification link has been sent to:</Text>
+            <Text style={styles.email}>{email}</Text>
+            <Text style={styles.description2}>
+              Please check your inbox and click the link to verify your email address.
+            </Text>
+          </View>
+        </View>
+        {/* Verify Button at the bottom */}
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.button} onPress={handleVerifyEmail}>
+            <Text style={styles.buttonText}>Verify Email</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </ScreenWrapper>
   );
 };
 
+export default EmailVeriScreen;
+
 const styles = StyleSheet.create({
-  background: {
+  container: {
     flex: 1,
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    width: '100%',
-    backgroundColor: '#fff',
+    justifyContent: 'space-between',
   },
-  header: {
-    position: 'absolute',
-    top: 50,
-    left: 20,
-    zIndex: 1,
+  backButton: {
+    marginTop: 40,
+    marginLeft: 10,
+    alignSelf: 'flex-start',
   },
   iconContainer: {
     width: '100%',
     alignItems: 'center',
-    marginTop: 80,
-    marginBottom: 10,
+    marginTop: 10,
   },
   icon: {
     width: '100%',
-    height: 250,
-    marginTop: 60,
+    height: 320,
   },
-  container: {
-    padding: 1,
-    borderRadius: 16,
+  textContainer: {
     alignItems: 'center',
+    paddingHorizontal: 20,
+    marginTop: 30,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 1,
+    marginBottom: 10,
     textAlign: 'center',
-    bottom: -40,
   },
   description: {
     fontSize: 16,
     color: '#555',
-    marginBottom: 8,
     textAlign: 'center',
-    bottom: -60,
-  },
-  description2: {
-    fontSize: 16,
-    color: '#555',
     marginBottom: 8,
-    textAlign: 'center',
-    bottom: -30,
-    paddingInlineEnd: 10,
-    paddingBlockEnd: 10,
-    paddingInlineStart: 10,
   },
   email: {
     fontSize: 16,
     color: '#17709C',
     fontWeight: 'bold',
-    marginBottom: 24,
+    marginBottom: 16,
     textAlign: 'center',
-    bottom: -50,
+  },
+  description2: {
+    fontSize: 16,
+    color: '#555',
+    textAlign: 'center',
+    paddingHorizontal: 10,
+  },
+  buttonContainer: {
+    width: '100%',
+    alignItems: 'center',
+    marginBottom: 30,
   },
   button: {
     backgroundColor: '#69DDF1',
     paddingVertical: 14,
-    paddingHorizontal: 110,
     borderRadius: 30,
-    marginTop: 24,
-    bottom: -150,
     width: '90%',
     alignItems: 'center',
     alignSelf: 'center',
   },
   buttonText: {
     color: 'black',
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: '700',
   },
+  contentContainer: {
+    marginTop: 40,
+  },
 });
-
-export default EmailVeriScreen;

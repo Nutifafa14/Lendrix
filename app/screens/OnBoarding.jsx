@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef  , useEffect} from 'react';
 import {
   View,
   Text,
@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { PanGestureHandler, State } from 'react-native-gesture-handler';
 import OnBoardingIllustration from './OnBoardingIllustration';
+import ScreenWrapper from '../components/ScreenWrapper';
 
 const { width } = Dimensions.get('window');
 
@@ -20,6 +21,8 @@ const OnBoarding = ({ navigation }) => {
   const fadeAnim = useRef(new Animated.Value(1)).current;
   const panGestureRef = useRef(null);
 
+  // Remove this part to remove the onboarding screen skip
+ 
   const slides = [
     {
       id: 1,
@@ -137,9 +140,7 @@ const OnBoarding = ({ navigation }) => {
         }),
       ]).start(() => {
         setCurrentSlide(index);
-
         slideAnim.setValue(direction === 'next' ? 50 : -50);
-
         Animated.parallel([
           Animated.timing(fadeAnim, {
             toValue: 1,
@@ -177,87 +178,74 @@ const OnBoarding = ({ navigation }) => {
   const currentSlideData = slides[currentSlide];
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="white" />
+    <ScreenWrapper>
+      <SafeAreaView style={styles.container}>
+        <StatusBar barStyle="dark-content" backgroundColor="white" />
 
-      <PanGestureHandler
-        ref={panGestureRef}
-        onGestureEvent={handleGestureEvent}
-        onHandlerStateChange={handleGestureStateChange}
-        minPointers={1}
-        maxPointers={1}
-      >
-        <View style={styles.gestureContainer}>
-          {/* Main Content */}
-          <View style={styles.content}>
-            {/* Illustration Container */}
-            <Animated.View
-              style={[
-                styles.illustrationContainer,
-                {
-                  backgroundColor: currentSlideData.backgroundColor,
-                  opacity: fadeAnim,
-                  transform: [{ translateX: slideAnim }],
-                },
-              ]}
-            >
-              <View style={styles.iconWrapper}>
-                <OnBoardingIllustration slideIndex={currentSlide} />
-                {/* Decorative elements */}
-                <View style={[styles.decorativeCircle, styles.circle1]} />
-                <View style={[styles.decorativeCircle, styles.circle2]} />
-                <View style={[styles.decorativeCircle, styles.circle3]} />
+        <PanGestureHandler
+          ref={panGestureRef}
+          onGestureEvent={handleGestureEvent}
+          onHandlerStateChange={handleGestureStateChange}
+          minPointers={1}
+          maxPointers={1}
+        >
+          <View style={styles.gestureContainer}>
+            <View style={styles.content}>
+              <Animated.View
+                style={[
+                  styles.illustrationContainer,
+                  {
+                    backgroundColor: currentSlideData.backgroundColor,
+                    opacity: fadeAnim,
+                    transform: [{ translateX: slideAnim }],
+                  },
+                ]}
+              >
+                <View style={styles.iconWrapper}>
+                  <OnBoardingIllustration slideIndex={currentSlide} />
+                  <View style={[styles.decorativeCircle, styles.circle1]} />
+                  <View style={[styles.decorativeCircle, styles.circle2]} />
+                  <View style={[styles.decorativeCircle, styles.circle3]} />
+                </View>
+              </Animated.View>
+
+              <Animated.View
+                style={[
+                  styles.textContainer,
+                  {
+                    opacity: fadeAnim,
+                    transform: [{ translateX: slideAnim }],
+                  },
+                ]}
+              >
+                <Text style={styles.title}>{currentSlideData.title}</Text>
+                <Text style={styles.description}>{currentSlideData.description}</Text>
+              </Animated.View>
+
+              <View style={styles.swipeIndicator}>
+                <Text style={styles.swipeText}>Swipe to navigate</Text>
               </View>
-            </Animated.View>
+            </View>
 
-            {/* Text Content */}
-            <Animated.View
-              style={[
-                styles.textContainer,
-                {
-                  opacity: fadeAnim,
-                  transform: [{ translateX: slideAnim }],
-                },
-              ]}
-            >
-              <Text style={styles.title}>{currentSlideData.title}</Text>
-              <Text style={styles.description}>{currentSlideData.description}</Text>
-            </Animated.View>
+            <View style={styles.bottomContainer}>
+              {renderProgressDots()}
 
-            {/* Swipe Indicator */}
-            <View style={styles.swipeIndicator}>
-              <Text style={styles.swipeText}>Swipe to navigate</Text>
+              <View style={styles.navigationContainer}>
+                <TouchableOpacity style={styles.skipButton} onPress={handleSkip} activeOpacity={0.7}>
+                  <Text style={styles.skipButtonText}>Skip</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.nextButton} onPress={handleNext} activeOpacity={0.8}>
+                  <Text style={styles.nextButtonText}>
+                    {currentSlide === slides.length - 1 ? 'Get Started' : 'Next'}
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
-
-          {/* Bottom Navigation */}
-          <View style={styles.bottomContainer}>
-            {renderProgressDots()}
-
-            <View style={styles.navigationContainer}>
-              <TouchableOpacity
-                style={styles.skipButton}
-                onPress={handleSkip}
-                activeOpacity={0.7}
-              >
-                <Text style={styles.skipButtonText}>Skip</Text>
-              </TouchableOpacity>
-
-              {/* Next Button */}
-              <TouchableOpacity
-                style={styles.nextButton}
-                onPress={handleNext}
-                activeOpacity={0.8}
-              >
-                <Text style={styles.nextButtonText}>
-                  {currentSlide === slides.length - 1 ? 'Get Started' : 'Next'}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </PanGestureHandler>
-    </SafeAreaView>
+        </PanGestureHandler>
+      </SafeAreaView>
+    </ScreenWrapper>
   );
 };
 
@@ -400,7 +388,7 @@ const styles = StyleSheet.create({
   },
   nextButtonText: {
     fontSize: 16,
-    color: 'white',
+    color: 'black',
     fontWeight: '600',
     marginRight: 8,
   },

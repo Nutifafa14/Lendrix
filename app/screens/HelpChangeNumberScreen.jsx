@@ -6,6 +6,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import ModalBottom from 'react-native-modal';
+import ScreenWrapper from '../components/ScreenWrapper';
 
 const HelpChangeNumberScreen = () => {
   const navigation = useNavigation();
@@ -34,59 +35,61 @@ const HelpChangeNumberScreen = () => {
 
   return (
     <>
-      <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 40 }}>
-        <Pressable style={styles.backButton} onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={30} color="black" />
-        </Pressable>
-
-        <Text style={styles.title}>I need to change my{'\n'}phone number</Text>
-        <Text style={styles.paragraph}>
-          This article covers how you can change your phone number and what to do if you’ve changed your phone and can’t log in.
-        </Text>
-
-        <Text style={styles.subtitle}>I’ve changed my phone number and can’t log in</Text>
-        <Text style={styles.paragraph}>
-          If you’ve lost access to your old number and can’t access your account, don’t worry - here’s how you can change your number:
-        </Text>
-
-        <Text style={styles.listItem}>1. Log in with your email and password</Text>
-        <Text style={styles.listItem}>2. In the 2-step verification page, choose <Text style={styles.bold}>Try another way</Text></Text>
-        <Text style={styles.listItem}>3. If you can’t use any alternative 2-step verification methods, choose <Text style={styles.bold}>I don’t have any of these</Text></Text>
-        <Text style={styles.listItem}>4. Follow the steps to confirm your identity and phone number</Text>
-        <Text style={styles.listItem}>5. Once confirmed, we’ll be able to change your phone number.</Text>
-
-        <Text style={styles.subtitle}>I’m logged in and need to change my phone number</Text>
-        <Text style={styles.paragraph}>You can change your phone number on your app.</Text>
-
-        <Text style={styles.subheading}>App</Text>
-        <Text style={styles.listItem}>1. Go to your profile name in the top corner</Text>
-        <Text style={styles.listItem}>2. Go to <Text style={styles.bold}>Personal details</Text> and select <Text style={styles.bold}>Mobile Number</Text></Text>
-        <Text style={styles.listItem}>3. Select <Text style={styles.bold}>Change Mobile number</Text></Text>
-        <Text style={styles.listItem}>4. Complete the steps to update your number</Text>
-        <Text style={styles.listItem}>5. After you’re done, we’ll send an SMS to your new number to verify it</Text>
-
-        <Text style={styles.paragraph}>
-          The steps can differ, and in some cases we’ll need to request more information to verify who you are.
-        </Text>
-        <Text style={styles.paragraph}>
-          You might need to update your phone number on your account before getting rid of your old SIM, as we might need to send an SMS to your phone number to confirm it’s really you making the changes.
-        </Text>
-        <Text style={styles.paragraph}>
-          If you don’t have access to your old SIM, you can use the logged out instructions above.
-        </Text>
-
-        <View style={styles.divider} />
-
-        <Text style={styles.feedbackPrompt}>Was this article helpful?</Text>
-        <View style={styles.buttonRow}>
-          <Pressable style={styles.feedbackButton} onPress={handleYes}>
-            <Text style={styles.feedbackText}>😊 Yes</Text>
+      <ScreenWrapper>
+        <ScrollView contentContainerStyle={{ paddingBottom: 40 }}>
+          <Pressable style={styles.backButton} onPress={() => navigation.goBack()}>
+            <Ionicons name="arrow-back" size={30} color="black" />
           </Pressable>
-          <Pressable style={styles.feedbackButton} onPress={handleNo}>
-            <Text style={styles.feedbackText}>😞 No</Text>
-          </Pressable>
-        </View>
-      </ScrollView>
+
+          <Text style={styles.title}>I need to change my{'\n'}phone number</Text>
+          <Text style={styles.paragraph}>
+            This article covers how you can change your phone number and what to do if you’ve changed your phone and can’t log in.
+          </Text>
+
+          <Text style={styles.subtitle}>I’ve changed my phone number and can’t log in</Text>
+          <Text style={styles.paragraph}>
+            If you’ve lost access to your old number and can’t access your account, don’t worry - here’s how you can change your number:
+          </Text>
+
+          <Text style={styles.listItem}>1. Log in with your email and password</Text>
+          <Text style={styles.listItem}>2. In the 2-step verification page, choose <Text style={styles.bold}>Try another way</Text></Text>
+          <Text style={styles.listItem}>3. If you can’t use any alternative 2-step verification methods, choose <Text style={styles.bold}>I don’t have any of these</Text></Text>
+          <Text style={styles.listItem}>4. Follow the steps to confirm your identity and phone number</Text>
+          <Text style={styles.listItem}>5. Once confirmed, we’ll be able to change your phone number.</Text>
+
+          <Text style={styles.subtitle}>I’m logged in and need to change my phone number</Text>
+          <Text style={styles.paragraph}>You can change your phone number on your app.</Text>
+
+          <Text style={styles.subheading}>App</Text>
+          <Text style={styles.listItem}>1. Go to your profile name in the top corner</Text>
+          <Text style={styles.listItem}>2. Go to <Text style={styles.bold}>Personal details</Text> and select <Text style={styles.bold}>Mobile Number</Text></Text>
+          <Text style={styles.listItem}>3. Select <Text style={styles.bold}>Change Mobile number</Text></Text>
+          <Text style={styles.listItem}>4. Complete the steps to update your number</Text>
+          <Text style={styles.listItem}>5. After you’re done, we’ll send an SMS to your new number to verify it</Text>
+
+          <Text style={styles.paragraph}>
+            The steps can differ, and in some cases we’ll need to request more information to verify who you are.
+          </Text>
+          <Text style={styles.paragraph}>
+            You might need to update your phone number on your account before getting rid of your old SIM, as we might need to send an SMS to your phone number to confirm it’s really you making the changes.
+          </Text>
+          <Text style={styles.paragraph}>
+            If you don’t have access to your old SIM, you can use the logged out instructions above.
+          </Text>
+
+          <View style={styles.divider} />
+
+          <Text style={styles.feedbackPrompt}>Was this article helpful?</Text>
+          <View style={styles.buttonRow}>
+            <Pressable style={styles.feedbackButton} onPress={handleYes}>
+              <Text style={styles.feedbackText}>😊 Yes</Text>
+            </Pressable>
+            <Pressable style={styles.feedbackButton} onPress={handleNo}>
+              <Text style={styles.feedbackText}>😞 No</Text>
+            </Pressable>
+          </View>
+        </ScrollView>
+      </ScreenWrapper>
 
       <ModalBottom
         isVisible={isModalVisible}
@@ -141,148 +144,73 @@ const HelpChangeNumberScreen = () => {
 };
 
 export default HelpChangeNumberScreen;
-
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 21,
-    paddingTop: 12,
-    backgroundColor: '#fff',
-  },
   backButton: {
-    marginBottom: 10,
-    marginTop: 10,
-    width: 40,
+    position: 'absolute',
+    top: 15,
+    left: 16,
+    zIndex: 10,
+    padding: 8,
+    marginLeft: -25
   },
   title: {
     fontSize: 22,
     fontWeight: 'bold',
-    marginBottom: 12,
+    marginTop: 32,
+    textAlign: 'center',
+  },
+  paragraph: {
+    fontSize: 15,
+    textAlign: 'center',
+    marginTop: 16,
+    lineHeight: 22,
+    color: '#333',
   },
   subtitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginTop: 18,
-    marginBottom: 6,
+    marginTop: 24,
+    textAlign: 'left',
   },
   subheading: {
     fontSize: 16,
     fontWeight: 'bold',
-    marginTop: 10,
-    marginBottom: 4,
-  },
-  paragraph: {
-    fontSize: 14,
-    color: '#333',
-    marginBottom: 8,
-    lineHeight: 20,
+    marginTop: 16,
   },
   listItem: {
-    fontSize: 14,
+    fontSize: 15,
+    marginLeft: 10,
+    marginTop: 8,
     color: '#333',
-    marginBottom: 6,
-    paddingLeft: 8,
-    lineHeight: 20,
   },
   bold: {
     fontWeight: 'bold',
   },
   divider: {
-    height: 1,
-    backgroundColor: '#eaeaea',
-    marginVertical: 18,
-    width: '120%',
-    marginLeft: '-10%',
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: '#ccc',
+    marginVertical: 20,
   },
   feedbackPrompt: {
     fontSize: 16,
-    fontWeight: '500',
-    marginTop: 12,
-    marginBottom: 12,
+    textAlign: 'center',
+    marginTop: 20,
+    color: '#555',
   },
   buttonRow: {
     flexDirection: 'row',
-    gap: 10,
-    marginBottom: 30,
+    justifyContent: 'center',
+    marginTop: 10,
   },
   feedbackButton: {
-    backgroundColor: '#CFFFE5',
-    borderRadius: 20,
+    paddingHorizontal: 20,
     paddingVertical: 10,
-    paddingHorizontal: 24,
-    marginRight: 10,
+    borderRadius: 20,
+    backgroundColor: '#f0f0f0',
+    marginHorizontal: 5,
   },
   feedbackText: {
     fontSize: 16,
-    fontWeight: 'bold',
-    color: '#000',
-  },
-  modalContainer: {
-    justifyContent: 'flex-end',
-    margin: 0,
-  },
-  modalContent: {
-    backgroundColor: '#fff',
-    borderTopRightRadius: 20,
-    borderTopLeftRadius: 20,
-    padding: 20,
-    paddingBottom: 30,
-  },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 16,
-  },
-  option: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  radioCircle: {
-    width: 18,
-    height: 18,
-    borderRadius: 9,
-    borderWidth: 2,
-    borderColor: '#555',
-    marginRight: 12,
-  },
-  radioSelected: {
-    backgroundColor: '#000',
-  },
-  optionText: {
-    fontSize: 15,
     color: '#333',
-  },
-  textInputLabel: {
-    marginTop: 20,
-    fontSize: 14,
-    fontWeight: 'bold',
-    marginBottom: 4,
-  },
-  note: {
-    fontSize: 12,
-    color: '#666',
-    marginBottom: 10,
-  },
-  textInput: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 10,
-    padding: 10,
-    fontSize: 14,
-    textAlignVertical: 'top',
-    backgroundColor: '#f9f9f9',
-    marginBottom: 16,
-  },
-  submitButton: {
-    backgroundColor: '#98f5a3',
-    paddingVertical: 12,
-    borderRadius: 12,
-    alignItems: 'center',
-  },
-  submitText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#000',
   },
 });
