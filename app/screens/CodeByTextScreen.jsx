@@ -2,19 +2,19 @@ import React, { useRef, useState } from 'react';
 import {
   View, Text, TextInput, StyleSheet,
   TouchableOpacity, KeyboardAvoidingView, Platform,
-  TouchableWithoutFeedback, Keyboard 
+  TouchableWithoutFeedback, Keyboard
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import ScreenWrapper from '../components/ScreenWrapper';
 
 const CODE_LENGTH = 6;
 
 const CodeByTextScreen = ({ navigation }) => {
   const [code, setCode] = useState(new Array(CODE_LENGTH).fill(''));
   const [isDoneEnabled, setIsDoneEnabled] = useState(false);
-
   const inputs = useRef([]);
-  // Example phone number, replace with actual user number as needed
-  const phoneNumber = '0801234908';
+
+  const phoneNumber = '0801234908'; // Example, replace later
 
   const handleChange = (text, index) => {
     if (!/^\d*$/.test(text)) return;
@@ -23,12 +23,10 @@ const CodeByTextScreen = ({ navigation }) => {
     newCode[index] = text;
     setCode(newCode);
 
-    // Move to next input
     if (text && index < CODE_LENGTH - 1) {
       inputs.current[index + 1]?.focus();
     }
 
-    // Enable Done button
     setIsDoneEnabled(newCode.join('').replace(/\s/g, '').length === CODE_LENGTH);
   };
 
@@ -38,161 +36,156 @@ const CodeByTextScreen = ({ navigation }) => {
     }
   };
 
-  const handleBack = () => {
-    navigation.goBack();
-  };
+  const handleBack = () => navigation.goBack();
+  const handleDone = () => alert('Code submitted: ' + code.join(''));
 
-  const handleDone = () => {
-    // Add your code verification logic here
-    // Example: navigation.navigate('NextScreen');
-    alert('Code submitted: ' + code.join(''));
-  };
-
-  // Mask phone number: show ****** and last 3 digits
   const getMaskedNumber = () => {
-    if (!phoneNumber || phoneNumber.length < 3) return '';
-    return '******' + phoneNumber.slice(-3);
+    return phoneNumber?.length >= 3 ? '*******' + phoneNumber.slice(-3) : '';
   };
 
- return (
-  <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-    >
-      {/* Top row */}
-      <View style={styles.topBar}>
-        <TouchableOpacity onPress={handleBack}>
-          <Ionicons name="arrow-back" size={35} color="black" bottom={20} />
-        </TouchableOpacity>
-      </View>
+  return (
+    <ScreenWrapper>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        >
+          {/* Back Button */}
+          <View style={styles.absoluteBackButton}>
+            <TouchableOpacity onPress={handleBack}>
+              <Ionicons name="arrow-back" size={30} color="black" />
+            </TouchableOpacity>
+          </View>
 
-      <Text style={styles.title} bottom={20}>We just sent you a code</Text>
-      <Text style={styles.subtitle}>
-        To log in, enter the security code we sent to you {getMaskedNumber() && `on ${getMaskedNumber()}`}. It will expire in 5 minutes
-      </Text>
+          <View style={styles.contentContainer}>
+            <Text style={styles.title}>We just sent you a code</Text>
+            <Text style={styles.subtitle}>
+              To log in, enter the security code we sent to you {getMaskedNumber() && `on ${getMaskedNumber()}`}. It will expire in 5 minutes
+            </Text>
 
-      {/* Code boxes */}
-      <View style={styles.codeContainer}>
-        {code.map((digit, index) => (
-          <TextInput
-            key={index}
-            ref={(ref) => (inputs.current[index] = ref)}
-            style={[styles.codeBox, digit !== '' && styles.activeBox]}
-            keyboardType="number-pad"
-            maxLength={1}
-            value={digit}
-            onChangeText={(text) => handleChange(text, index)}
-            onKeyPress={(e) => handleKeyPress(e, index)}
-            autoFocus={index === 0}
-            textAlign="center"
-          />
-        ))}
-      </View>
-<TouchableOpacity>
-        <Text style={styles.resend}>Try another way</Text>
-      </TouchableOpacity>
+            {/* Code Input */}
+            <View style={styles.codeContainer}>
+              {code.map((digit, index) => (
+                <TextInput
+                  key={index}
+                  ref={(ref) => (inputs.current[index] = ref)}
+                  style={[styles.codeBox, digit !== '' && styles.activeBox]}
+                  keyboardType="number-pad"
+                  maxLength={1}
+                  value={digit}
+                  onChangeText={(text) => handleChange(text, index)}
+                  onKeyPress={(e) => handleKeyPress(e, index)}
+                  textAlign="center"
+                />
+              ))}
+            </View>
 
-      {/* Done button */}
-      <TouchableOpacity
-        style={[styles.ContinueButton, isDoneEnabled ? styles.buttonEnabled : styles.buttonDisabled]}
-        disabled={!isDoneEnabled}
-        onPress={handleDone}
-      >
-        <Text style={styles.ContinueText}>Continue</Text>
-      </TouchableOpacity>
-    </KeyboardAvoidingView>
-  </TouchableWithoutFeedback>
-);
+            <TouchableOpacity onPress={() => navigation.navigate('TwoStepVeriScreen')}>
+              <Text style={styles.resend}>Try another way</Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={[styles.ContinueButton, isDoneEnabled ? styles.buttonEnabled : styles.buttonDisabled]}
+              disabled={!isDoneEnabled}
+              onPress={handleDone}
+            >
+              <Text style={styles.ContinueText}>Continue</Text>
+            </TouchableOpacity>
+          </View>
+        </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
+    </ScreenWrapper>
+  );
 };
 
 export default CodeByTextScreen;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: 22,
-    paddingTop: 60,
-    backgroundColor: '#fff',
-  },
+  container: { flex: 1, padding: 20, backgroundColor: '#fff' },
   topBar: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    marginLeft: -5,
-    bottom: 20,
+    marginTop: 10,
+    marginBottom: 20,
+    alignSelf: 'flex-start',
   },
-  helpButton: {
-    backgroundColor: '#69DDF1',
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    borderRadius: 25,
-    flexDirection: 'row-reverse',
-    bottom: 10,
-    marginRight: 10,
-  },
-  helpText: {
-    color: '#2d6a4f',
-    fontWeight: '500',
-  },
-  title: {
-    fontSize: 30,
-    fontWeight: 'bold',
-    marginTop: 30,
-    textAlign: 'center',
-    color: '#000',
-    botttom: 20,
-    
-  },
+  title: { fontSize: 24, fontWeight: 'bold', marginBottom:  10, textAlign: 'center' },   
   subtitle: {
-    textAlign: 'center',
-    marginVertical: 12,
-    color: '#666',
     fontSize: 16,
+    color: '#555',
+    textAlign: 'center',
+    marginBottom: 20,
   },
   codeContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginVertical: 32,
-    gap: 10,
+    marginBottom: 30,
+    marginTop: 10,
   },
   codeBox: {
-    width: 48,
-    height: 56,
-    borderWidth: 2,
+    width: 50,
+    height: 50,
+    borderWidth: 1,
     borderColor: '#ccc',
-    borderRadius: 8,
+    borderRadius: 10,
+    textAlign: 'center',
     fontSize: 24,
     color: '#000',
-    textAlign: 'center',
-    textAlignVertical: 'center',
-    padding: 0,
   },
   activeBox: {
-    borderColor: '#4f46e5',
+    borderColor: '#007AFF',
+    backgroundColor: '#f0f8ff',
   },
   resend: {
+    color: '#007AFF',
     textAlign: 'center',
-    color: '#1e3a8a',
-    textDecorationLine: 'underline',
-    marginBottom: 30,
-    fontSize: 16,
+    marginBottom: 20,
+    marginTop: 10,
   },
   ContinueButton: {
     alignItems: 'center',
-    paddingVertical: 14,
+    justifyContent: 'center',
+    height: 50,
+    padding: 15,
     borderRadius: 30,
-    bottom: -200,
+    width: '100%',
+    marginBottom: 30,
   },
   buttonEnabled: {
     backgroundColor: '#69DDF1',
   },
   buttonDisabled: {
-    backgroundColor: '#e2e8f0',
+    backgroundColor: '#ccc',
   },
   ContinueText: {
-    fontSize: 16,
-    fontWeight: '600',
     color: '#000',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
-});
+  absoluteBackButton: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
+    zIndex: 10,
+  },
+  contentWrapper: {
+    flex: 1,
+    justifyContent: 'center',
+    marginTop: 50,
+  },
+  bottomButtonWrapper: {
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    marginBottom: 30,
+  },
+  contentContainer: {
+    marginTop: 70,
+  },
+  buttonContainer: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    marginBottom: 20,
+  },
+})

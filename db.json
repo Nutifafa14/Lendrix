@@ -1,0 +1,103 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "name": "Alice",
+      "email": "alice@example.com"
+    },
+    {
+      "id": "2",
+      "name": "Bob",
+      "email": "bob@example.com"
+    },
+    {
+      "id": "f8a2",
+      "name": "Nutifafa",
+      "email": "nutifafadziedzoave@gmail.com",
+      "verified": true,
+      "password": "Dzie_nuti@14",
+      "passcode": "1402"
+    },
+    {
+      "id": "6f52",
+      "name": "Kwame",
+      "email": "kwame@gmail.com",
+      "verified": true,
+      "password": "Nisbsidbdkxnd6",
+      "passcode": "1235"
+    },
+    {
+      "id": "c45a",
+      "name": "Fred",
+      "email": "fred@gmail.com",
+      "verified": true,
+      "password": "Gbdjd xjdncjfncj7",
+      "passcode": "1280"
+    },
+    {
+      "id": "aa12",
+      "name": "Christabel",
+      "email": "christabel@gmail.com",
+      "verified": true
+    },
+    {
+      "id": "6481",
+      "name": "Fafa ",
+      "email": "fafa@gmail.com",
+      "verified": true,
+      "password": "Gggjdjdbdirjfr6"
+    },
+    {
+      "id": "ec93",
+      "name": "Lex",
+      "email": "lex@gmail.com",
+      "verified": true
+    }
+  ],
+  "transactions": [
+    {
+      "id": "1",
+      "userId": 1,
+      "amount": 100,
+      "type": "deposit"
+    },
+    {
+      "id": "2",
+      "userId": 2,
+      "amount": 50,
+      "type": "withdrawal"
+    }
+  ],
+  "verifications": [
+    {
+      "id": "1c2a",
+      "phone": "+233551133908",
+      "country": "GH"
+    },
+    {
+      "id": "1645",
+      "phone": "+233551133908",
+      "country": "GH"
+    },
+    {
+      "id": "61f3",
+      "phone": "+233551133908",
+      "country": "GH"
+    },
+    {
+      "id": "49a1",
+      "phone": "+233551133908",
+      "country": "GH"
+    },
+    {
+      "id": "c20b",
+      "phone": "+233551133908",
+      "country": "GH"
+    },
+    {
+      "id": "c141",
+      "phone": "+233551133908",
+      "country": "GH"
+    }
+  ]
+}

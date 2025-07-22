@@ -1,6 +1,6 @@
 import React from 'react';
 import { Image, useWindowDimensions } from 'react-native';
-
+import ScreenWrapper from '../components/ScreenWrapper';
 const images = [
   require('../assets/Group_7.png'),
   require('../assets/Group_6.png'),

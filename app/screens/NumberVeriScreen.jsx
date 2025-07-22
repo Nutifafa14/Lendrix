@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { isValidPhoneNumber } from 'libphonenumber-js';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import ScreenWrapper from '../components/ScreenWrapper';
 
 export default function NumberVeriScreen() {
   const navigation = useNavigation();
@@ -11,61 +13,81 @@ export default function NumberVeriScreen() {
 
   // Get the country code dynamically, fallback to empty string
   const countryCode = country?.callingCode ? `+${country.callingCode[0]}` : '';
+  const countryISO = country?.cca2 || undefined;
 
-  // Only enable if 9 digits and all are numbers
-  const isButtonDisabled = !(phoneNumber.length === 9 && /^\d{9}$/.test(phoneNumber));
+  // Validate using libphonenumber-js
+  const fullNumber = countryCode + phoneNumber;
+  const isButtonDisabled = !isValidPhoneNumber(fullNumber, countryISO);
 
-  const handleSendCode = () => {
+  const handleSendCode = async () => {
     if (isButtonDisabled) return;
-    console.log('Sending code to', countryCode, phoneNumber);
-    navigation.navigate('SmsScreen');
+    try {
+      const response = await fetch('http://10.132.134.92:3000/verifications', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: fullNumber, country: countryISO }),
+      });
+      if (!response.ok) throw new Error('Failed to send code');
+      navigation.navigate('SmsScreen', { phone: fullNumber, country: countryISO });
+    } catch (error) {
+      alert('Failed to send verification code.');
+    }
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name='arrow-back' size={30} color="black" bottom={-10} />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.helpButton}>
-          <Text style={styles.helpText}> Help</Text>
-        </TouchableOpacity>
-      </View>
+    <ScreenWrapper>
+      <View style={styles.container}>
+        <View style={{flex: 1, justifyContent: 'space-between'}}>
+          <View>
+            <View style={styles.header}>
+              <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+                <Ionicons name='arrow-back' size={30} color="black" />
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.helpButton}>
+                <Text style={styles.helpText}> Help</Text>
+              </TouchableOpacity>
+            </View>
 
-      <View style={styles.content}>
-        <Text style={styles.title}>Verify your phone number with a code</Text>
-        <Text style={styles.subtitle}>We'll send you a code - it helps keep your account secure</Text>
-        <View style={styles.inputRow}>
-          <View style={styles.codeContainer}>
-            <TextInput
-              style={styles.countryCodeInput}
-              value={countryCode}
-              editable={false}
-            />
+            <View style={styles.content}>
+              <Text style={styles.title}>Verify your phone number with a code</Text>
+              <Text style={styles.subtitle}>
+                We'll send you a code - it helps keep your account secure
+              </Text>
+
+              <View style={styles.inputRow}>
+                <View style={styles.codeContainer}>
+                  <TextInput
+                    style={styles.countryCodeInput}
+                    value={countryCode}
+                    editable={false}
+                  />
+                </View>
+                <View style={styles.numberContainer}>
+                  <TextInput
+                    style={styles.phoneInput}
+                    keyboardType="phone-pad"
+                    placeholder="Your phone number"
+                    value={phoneNumber}
+                    onChangeText={setPhoneNumber}
+                    maxLength={9}
+                  />
+                </View>
+              </View>
+            </View>
           </View>
-          <View style={styles.numberContainer}>
-            <TextInput
-              style={styles.phoneInput}
-              keyboardType="phone-pad"
-              placeholder="Your phone number"
-              value={phoneNumber}
-              onChangeText={setPhoneNumber}
-              maxLength={9}
-            />
-          </View>
+          <TouchableOpacity
+            style={[
+              styles.sendButton,
+              isButtonDisabled && { backgroundColor: '#B0BEC5' },
+            ]}
+            onPress={handleSendCode}
+            disabled={isButtonDisabled}
+          >
+            <Text style={styles.buttonText}>Send Code</Text>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          style={[
-            styles.sendButton,
-            isButtonDisabled && { backgroundColor: '#B0BEC5' }
-          ]}
-          onPress={handleSendCode}
-          disabled={isButtonDisabled}
-        >
-          <Text style={styles.buttonText}>Send Code</Text>
-        </TouchableOpacity>
       </View>
-    </View>
+    </ScreenWrapper>
   );
 }
 
@@ -73,46 +95,44 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    paddingHorizontal: 16,
+    paddingHorizontal: 0,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 30,
+    marginTop: 15,
     width: '100%',
+    marginBottom: 10,
+  },
+  backButton: {
+    marginLeft: 10,
   },
   helpButton: {
     backgroundColor: '#69DDF1',
-    paddingHorizontal: 20, // increased from 10
-    paddingVertical: 12,   // increased from 5
-    borderRadius: 25,      // slightly larger for a bigger button
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 25,
     flexDirection: 'row-reverse',
-    bottom: -10,
     marginRight: 10,
   },
   helpText: {
     color: 'black',
     fontWeight: '500',
-    fontSize: 18, // increased from default
-  },
-  helpText: {
-    color: 'black',
-    fontWeight: '500',
+    fontSize: 18,
   },
   content: {
-    marginTop: 50,
+    marginTop: 30,
+    alignItems: 'flex-start',
   },
   title: {
     fontSize: 30,
     fontWeight: '700',
     marginBottom: 10,
-    bottom: 10
   },
   subtitle: {
     color: '#6B7280',
-    marginBottom: 50,
-    bottom: 10,
+    marginBottom: 30,
   },
   inputRow: {
     flexDirection: 'row',
@@ -122,16 +142,9 @@ const styles = StyleSheet.create({
   codeContainer: {
     marginRight: 10,
     width: 70,
-    bottom: 40,
   },
   numberContainer: {
     flex: 1,
-    bottom: 40,
-  },
-  label: {
-    color: '#6B7280',
-    marginBottom: 8,
-    fontSize: 14,
   },
   countryCodeInput: {
     borderWidth: 1,
@@ -142,8 +155,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     backgroundColor: '#f5f5f5',
     color: '#333',
-    textAlign: 'center', // Center the code
-},
+    textAlign: 'center',
+  },
   phoneInput: {
     borderWidth: 1,
     borderColor: '#D1D5DB',
@@ -159,7 +172,9 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     paddingVertical: 14,
     alignItems: 'center',
-    bottom: -250,
+    width: '90%',
+    alignSelf: 'center',
+    marginBottom: 60,
   },
   buttonText: {
     color: 'black',

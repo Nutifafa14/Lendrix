@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, Pressable, Alert } from 'react-native';
+import { View, Text, Image, StyleSheet, Pressable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
+import ScreenWrapper from '../components/ScreenWrapper';
 
 const ConfirmIdentityScreen = () => {
   const navigation = useNavigation();
@@ -10,12 +11,10 @@ const ConfirmIdentityScreen = () => {
     navigation.navigate('ChangeNumberScreen');
   };
 
- 
-
   return (
-    <View style={styles.container}>
+    <ScreenWrapper>
       <Pressable style={styles.backButton} onPress={() => navigation.goBack()}>
-        <Ionicons name="arrow-back" size={30} color="#000" />
+        <Ionicons name="arrow-back" size={30} color="#000"  />
       </Pressable>
 
       <Image
@@ -30,33 +29,29 @@ const ConfirmIdentityScreen = () => {
         To help keep your account safe, we need to make sure it’s really you trying to login. To start, please confirm if you’d like to change your current number.
       </Text>
 
-      <Pressable style={styles.primaryButton} onPress={handleChangePhone}>
-        <Text style={styles.primaryButtonText}>Change phone number</Text>
-      </Pressable>
+      <View style={styles.buttonContainer}>
+        <Pressable style={styles.primaryButton} onPress={handleChangePhone}>
+          <Text style={styles.primaryButtonText}>Change phone number</Text>
+        </Pressable>
 
-      <Pressable onPress={() => navigation.navigate('HelpChangeNumberScreen')}>
-              <Text style={styles.secondaryText}>Contact Us</Text>
-            </Pressable>
-      
-    </View>
+        <Pressable onPress={() => navigation.navigate('HelpChangeNumberScreen')}>
+          <Text style={styles.secondaryText}>Contact Us</Text>
+        </Pressable>
+      </View>
+    </ScreenWrapper>
   );
 };
 
 export default ConfirmIdentityScreen;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 24,
-    justifyContent: 'flex-start',
-    backgroundColor: '#fff',
-  },
   backButton: {
     position: 'absolute',
     top: 15,
-    left: 16,
+    left: 20,
     zIndex: 10,
     padding: 8,
+    
   },
   image: {
     width: '100%',
@@ -82,19 +77,22 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     borderRadius: 25,
     alignItems: 'center',
-   
+    width: '100%',
   },
   primaryButtonText: {
     color: '#000',
     fontWeight: 'bold',
     fontSize: 16,
-    
   },
   secondaryText: {
     marginTop: 20,
     textAlign: 'center',
     color: '#007AFF',
     textDecorationLine: 'underline',
-    bottom: -48
+    bottom: -40,
+  },
+  buttonContainer: {
+    marginTop: 80,
+    width: '100%',
   },
 });

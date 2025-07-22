@@ -1,26 +1,39 @@
 {
   "name": "myproject",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "index.jsx",
   "scripts": {
-    "start": "expo start",
+    "start": " EXPO_USE_PROXY=1 expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "mock-api": "json-server --watch db.json --port 3000"
   },
   "dependencies": {
     "@expo/vector-icons": "^14.1.0",
-    "@expo/webpack-config": "^19.0.1",
-    "@react-native-google-signin/google-signin": "^14.0.1",
+    "@react-native-async-storage/async-storage": "2.1.2",
+    "@react-native-community/datetimepicker": "8.4.1",
+    "@react-native-firebase/app": "^22.2.1",
+    "@react-native-firebase/auth": "^22.2.1",
+    "@react-native-google-signin/google-signin": "^14.0.2",
     "@react-navigation/native": "^7.1.10",
     "@react-navigation/stack": "^7.3.2",
+    "@realtril/react-native-country-picker-modal": "^1.0.12",
+    "axios": "^1.10.0",
     "expo": "~53.0.9",
+    "expo-auth-session": "~6.2.1",
+    "expo-crypto": "~14.1.5",
     "expo-linear-gradient": "~14.1.4",
     "expo-router": "~5.0.7",
     "expo-status-bar": "~2.2.3",
+    "expo-updates": "~0.28.17",
+    "expo-web-browser": "~14.2.0",
+    "libphonenumber-js": "^1.12.10",
     "react": "19.0.0",
+    "react-async-hook": "^3.6.2",
     "react-dom": "19.0.0",
     "react-native": "0.79.2",
+    "react-native-chart-kit": "^6.12.0",
     "react-native-country-picker-modal": "^2.0.0",
     "react-native-gesture-handler": "^2.25.0",
     "react-native-modal": "^14.0.0-rc.1",
@@ -32,7 +45,8 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
-    "@react-native-community/cli": "latest"
+    "@react-native-community/cli": "latest",
+    "json-server": "^1.0.0-beta.3"
   },
   "private": true
 }

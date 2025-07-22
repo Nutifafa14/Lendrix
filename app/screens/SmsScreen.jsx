@@ -1,17 +1,37 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState ,useEffect} from 'react';
 import {
   View, Text, TextInput, StyleSheet,
   TouchableOpacity, KeyboardAvoidingView, Platform
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import ScreenWrapper from '../components/ScreenWrapper';
 
 const CODE_LENGTH = 6;
 
 const SmsScreen = ({ navigation }) => {
   const [code, setCode] = useState(new Array(CODE_LENGTH).fill(''));
   const [isDoneEnabled, setIsDoneEnabled] = useState(false);
-
   const inputs = useRef([]);
+  const [timer, setTimer] = useState(120);
+  useEffect(() => {
+    if (timer === 0) return;
+    const interval = setInterval(() => {
+      setTimer((prev) => prev - 1);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [timer]);
+
+  const formatTime = (seconds) => {
+    const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+    const s = (seconds % 60).toString().padStart(2, '0');
+    return `${m}:${s}`;
+  };
+
+  const handleResend = () => {
+    // TODO: trigger resend code logic here
+    setTimer(120); // restart timer
+  };
+
 
   const handleChange = (text, index) => {
     if (!/^\d*$/.test(text)) return;
@@ -20,12 +40,10 @@ const SmsScreen = ({ navigation }) => {
     newCode[index] = text;
     setCode(newCode);
 
-    // Move to next input
     if (text && index < CODE_LENGTH - 1) {
       inputs.current[index + 1]?.focus();
     }
 
-    // Enable Done button
     setIsDoneEnabled(newCode.join('').replace(/\s/g, '').length > 0);
   };
 
@@ -36,7 +54,12 @@ const SmsScreen = ({ navigation }) => {
   };
 
   const handleDone = () => {
-    navigation.navigate('PasswordScreen');
+    const enteredCode = code.join('');
+    if (enteredCode === '123456') {
+      navigation.navigate('PasswordScreen');
+    } else {
+      alert('Invalid code. Please try again.');
+    }
   };
 
   const handleBack = () => {
@@ -44,141 +67,139 @@ const SmsScreen = ({ navigation }) => {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-    >
-      {/* Top row */}
-      <View style={styles.topBar}>
-        <TouchableOpacity onPress={handleBack}>
-          <Ionicons name="arrow-back" size={35} color="black" />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.helpButton}>
-          <Text style={styles.helpText}>Help</Text>
-        </TouchableOpacity>
-      </View>
-
-      <Text style={styles.title}>We just sent you an SMS</Text>
-      <Text style={styles.subTitle}>Enter the security code we sent to{'\n'}*1234</Text>
-
-      {/* Code boxes */}
-      <View style={styles.codeContainer}>
-        {code.map((digit, index) => (
-          <TextInput
-            key={index}
-            ref={(ref) => (inputs.current[index] = ref)}
-            style={[styles.codeBox, digit !== '' && styles.activeBox]}
-            keyboardType="number-pad"
-            maxLength={1}
-            value={digit}
-            onChangeText={(text) => handleChange(text, index)}
-            onKeyPress={(e) => handleKeyPress(e, index)}
-            autoFocus={index === 0}
-            textAlign="center"
-          />
-        ))}
-      </View>
-
-      <TouchableOpacity>
-        <Text style={styles.resend}>Didn't receive a code?</Text>
-      </TouchableOpacity>
-
-      {/* Done button */}
-      <TouchableOpacity
-        style={[styles.doneButton, isDoneEnabled ? styles.buttonEnabled : styles.buttonDisabled]}
-        disabled={!isDoneEnabled}
-        onPress={handleDone}
+    <ScreenWrapper>
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
-        <Text style={styles.doneText}>Done</Text>
-      </TouchableOpacity>
-    </KeyboardAvoidingView>
+        <View style={styles.topBar}>
+          <TouchableOpacity onPress={handleBack}>
+            <Ionicons name="arrow-back" size={35} color="black" />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.helpButton}>
+            <Text style={styles.helpText}>Help</Text>
+          </TouchableOpacity>
+        </View>
+
+        <Text style={styles.title}>We just sent you an SMS</Text>
+        <Text style={styles.subTitle}>Enter the security code we sent to{'\n'}*1234</Text>
+
+        <View style={styles.codeContainer}>
+          {code.map((digit, index) => (
+            <TextInput
+              key={index}
+              ref={(ref) => (inputs.current[index] = ref)}
+              style={[styles.codeBox, digit !== '' && styles.activeBox]}
+              keyboardType="number-pad"
+              maxLength={1}
+              value={digit}
+              onChangeText={(text) => handleChange(text, index)}
+              onKeyPress={(e) => handleKeyPress(e, index)}
+              autoFocus={index === 0}
+              textAlign="center"
+            />
+          ))}
+        </View>
+
+        <TouchableOpacity
+          onPress={handleResend}
+          disabled={timer > 0}
+        >
+          <Text style={[styles.resend, timer > 0 && { color: '#aaa' }]}> 
+            {timer > 0
+              ? `Resend code in ${formatTime(timer)}`
+              : "Didn't receive a code? Tap to resend"}
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.doneButton, isDoneEnabled ? styles.buttonEnabled : styles.buttonDisabled]}
+          disabled={!isDoneEnabled}
+          onPress={handleDone}
+        >
+          <Text style={styles.doneText}>Done</Text>
+        </TouchableOpacity>
+      </KeyboardAvoidingView>
+    </ScreenWrapper>
   );
 };
 
 export default SmsScreen;
-
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 24,
-    paddingTop: 60,
     backgroundColor: '#fff',
+    padding: 1,
+    bottom: -60,
   },
   topBar: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    bottom: 20,
-   
+    justifyContent: 'space-between',
+    marginBottom: 20,
+    bottom: 50,
   },
   helpButton: {
+    paddingHorizontal: 10,
     backgroundColor: '#69DDF1',
-    paddingHorizontal: 20, // increased from 10
-    paddingVertical: 12,   // increased from 5
-    borderRadius: 25,      // slightly larger for a bigger button
-    flexDirection: 'row-reverse',
-    bottom: 10,
-    marginRight: 10,
+    borderRadius: 25,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
   },
   helpText: {
-    color: '#2d6a4f',
-    fontWeight: '500',
+    color: 'blackF',
+    fontSize: 18,
   },
   title: {
-    fontSize: 30,
+    fontSize: 24,
     fontWeight: 'bold',
-    marginTop: 32,
-    textAlign: 'center',
-    color: '#000',
+    marginBottom: 10,
+    bottom: 15,
   },
   subTitle: {
-    textAlign: 'center',
-    marginVertical: 12,
+    fontSize: 16,
     color: '#666',
+    marginBottom: 20,
+    bottom: 15,
   },
   codeContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginVertical: 32,
-    gap: 10,
+    marginBottom: 20,
   },
   codeBox: {
-  width: 48,
-  height: 56,
-  borderWidth: 2,
-  borderColor: '#ccc',
-  borderRadius: 8,
-  fontSize: 24,
-  color: '#000',
-  textAlign: 'center',           // Center horizontally
-  textAlignVertical: 'center',   // Center vertically (Android)
-  padding: 0, 
+    width: 50,
+    height: 50,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    textAlign: 'center',
+    fontSize: 24,
   },
   activeBox: {
-    borderColor: '#4f46e5',
+    borderColor: '#007AFF',
   },
   resend: {
+    color: '#007AFF',
     textAlign: 'center',
-    color: '#1e3a8a',
-    textDecorationLine: 'underline',
-    marginBottom: 30,
+    marginBottom: 20,
   },
   doneButton: {
+    paddingVertical: 15,
     alignItems: 'center',
-    paddingVertical: 14,
+    padding: 15,
     borderRadius: 30,
-    bottom: -300,
+    bottom: -250,
   },
   buttonEnabled: {
     backgroundColor: '#69DDF1',
   },
   buttonDisabled: {
-    backgroundColor: '#e2e8f0',
+    backgroundColor: '#B0BEC5',
   },
   doneText: {
-    fontSize: 16,
-    fontWeight: '600',
     color: '#000',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });

@@ -8,17 +8,58 @@ import {
   Image,
   Alert,
   SafeAreaView,
+  ScrollView,
+  Dimensions,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import * as Google from 'expo-auth-session/providers/google';
+import * as WebBrowser from 'expo-web-browser';
+import * as AuthSession from 'expo-auth-session';
+
+const { width } = Dimensions.get('window');
 
 export default function LoginScreen({ navigation }) {
+  const redirectUri = "https://auth.expo.io/@dzie_nuti/MyProject";
+console.log("Redirect URI:", redirectUri);
+
+
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  WebBrowser.maybeCompleteAuthSession();
+
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    clientId: '22225975817-3rcfe0elct39o9ku4hrkprt1lg0uqc7d.apps.googleusercontent.com',
+    androidClientId: '22225975817-v1idqmgd4r57rru6vp0680uh4uvn41n3.apps.googleusercontent.com',
+    expoClientId: '22225975817-3rcfe0elct39o9ku4hrkprt1lg0uqc7d.apps.googleusercontent.com',
+    redirectUri: redirectUri,
+    useProxy: true,
+  });
+
+
+
+  React.useEffect(() => {
+    if (response?.type === 'success') {
+      const { authentication } = response;
+      fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
+        headers: { Authorization: `Bearer ${authentication.accessToken}` },
+      })
+        .then(res => res.json())
+        .then(data => {
+          Alert.alert('Google Sign-In Success', `Welcome, ${data.name}!`);
+        })
+        .catch(err => {
+          Alert.alert('Error', 'Failed to fetch user info');
+        });
+    }
+  }, [response]);
 
   const handleLogin = () => {
-    if (!email || !password) {
-      Alert.alert('Error', 'Please enter both email and password');
+    if (!emailRegex.test(email)) {
+      Alert.alert('Invalid Email', 'Please enter a valid email address');
       return;
     }
     console.log('Email:', email, 'Password:', password);
@@ -26,102 +67,94 @@ export default function LoginScreen({ navigation }) {
   };
 
   const handleTroubleLogin = () => {
-     navigation.navigate('ForgottenPasswordScreen');
+    navigation.navigate('ForgottenPasswordScreen');
   };
 
   const handleGoogleLogin = () => {
-    console.log('Google login pressed');
-    // Implement Google login logic here
-  };
-
-  const handleFacebookLogin = () => {
-    console.log('Facebook login pressed');
-    // Implement Facebook login logic here
-  };
-
-  const handleAppleLogin = () => {
-    console.log('Apple login pressed');
-    // Implement Apple login logic here
+    promptAsync();
   };
 
   return (
     <SafeAreaView style={styles.container}>
-       <TouchableOpacity onPress={() => navigation.goBack()}>
-             <Ionicons name='arrow-back' size={30} color="black" bottom={-30} />
-             </TouchableOpacity>
-      <View style={styles.formContainer}>
-        <Text style={styles.title}>Log In</Text>
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+          <Ionicons name="arrow-back" size={30} color="black" />
+        </TouchableOpacity>
 
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-          autoCapitalize="none"
-        />
+        <View style={styles.formContainer}>
+          <Text style={styles.title}>Log In</Text>
 
-        <View style={styles.passwordContainer}>
           <TextInput
-            style={[styles.input, { flex: 1, marginBottom: 0 }]}
-            placeholder="Password"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry={!showPassword}
+            style={styles.input}
+            placeholder="Email"
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+            autoCapitalize="none"
+            autoCorrect={false}
           />
-          <TouchableOpacity
-            onPress={() => setShowPassword(!showPassword)}
-            style={styles.eyeIcon}
-          >
-            <Ionicons
-              name={showPassword ? 'eye-off' : 'eye'}
-              size={24}
-              color="#888"
+
+          {email.length > 0 && !emailRegex.test(email) && (
+            <Text style={styles.errorText}>Please enter a valid email address</Text>
+          )}
+
+          <View style={styles.passwordContainer}>
+            <TextInput
+              style={[styles.input, { flex: 1 }]}
+              placeholder="Password"
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry={!showPassword}
             />
+            <TouchableOpacity
+              onPress={() => setShowPassword(!showPassword)}
+              style={styles.eyeIcon}
+            >
+              <Ionicons
+                name={showPassword ? 'eye-off' : 'eye'}
+                size={24}
+                color="#888"
+              />
+            </TouchableOpacity>
+          </View>
+
+          <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+            <Text style={styles.loginButtonText}>Log in</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={handleTroubleLogin}>
+            <Text style={styles.troubleText}>Forgot password?</Text>
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-          <Text style={styles.loginButtonText}>Log in</Text>
-        </TouchableOpacity>
+        <View style={{ flex: 1 }} />
 
-        <TouchableOpacity onPress={handleTroubleLogin}>
-          <Text style={styles.troubleText}>Forgot password?</Text>
-        </TouchableOpacity>
-      </View>
+        <View style={styles.bottomSection}>
+          <View style={styles.registerContainer}>
+            <Text style={styles.registerText}>Don't have an account?</Text>
+            <TouchableOpacity onPress={() => navigation.navigate('MyRegisterScreen')}>
+              <Text style={styles.registerLink}> Register</Text>
+            </TouchableOpacity>
+          </View>
 
-      {/* Social Login Section */}
-      <View style={styles.bottomContainer}>
-        <Text style={styles.orText}>Or log in with</Text>
-        <View style={styles.socialButtonsContainer}>
-          <TouchableOpacity style={styles.socialButton} onPress={handleGoogleLogin}>
-            <Image
-              source={require('../assets/googleIcon.png')}
-              style={styles.socialIcon}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.socialButton} onPress={handleFacebookLogin}>
-            <Image
-              source={require('../assets/facebookIcon.png')}
-              style={styles.socialIcon}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.socialButton} onPress={handleAppleLogin}>
-            <Image
-              source={require('../assets/appleIcon.png')}
-              style={styles.socialIcon}
-            />
-          </TouchableOpacity>
+          <View style={styles.bottomContainer}>
+            <View style={styles.socialButtonsContainer}>
+              <TouchableOpacity
+                style={styles.socialButton}
+                onPress={handleGoogleLogin}
+              >
+                <View style={styles.socialContent}>
+                  <Image
+                    source={require('../assets/googleIcon.png')}
+                    style={styles.socialIcon}
+                  />
+                  <Text style={styles.socialText}>Continue with Google</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
-      </View>
-
-      {/* Register link */}
-      <View style={styles.registerContainer}>
-        <Text style={styles.registerText}>Don't have an account?</Text>
-        <TouchableOpacity onPress={() => navigation.navigate("MyRegisterScreen")}>
-          <Text style={styles.registerLink}> Register</Text>
-        </TouchableOpacity>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -129,19 +162,23 @@ export default function LoginScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     padding: 20,
     backgroundColor: '#fff',
   },
+  backButton: {
+    marginTop: 10,
+    marginBottom: 20,
+    alignSelf: 'flex-start',
+  },
   formContainer: {
-    marginTop: 60,
+    marginTop: 40,
   },
   title: {
     fontSize: 30,
     fontWeight: 'bold',
     marginBottom: 40,
     textAlign: 'center',
-    bottom: 100,
   },
   input: {
     height: 50,
@@ -151,7 +188,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     marginBottom: 15,
     fontSize: 16,
-    bottom: 50,
   },
   passwordContainer: {
     flexDirection: 'row',
@@ -162,7 +198,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 15,
     padding: 5,
-    bottom: 11,
   },
   loginButton: {
     backgroundColor: '#69DDF1',
@@ -170,7 +205,6 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     alignItems: 'center',
     marginBottom: 10,
-    bottom: -30,
   },
   loginButtonText: {
     color: '#000',
@@ -182,38 +216,49 @@ const styles = StyleSheet.create({
     color: '#007AFF',
     textDecorationLine: 'underline',
     marginTop: 5,
-    bottom: -50,
   },
   bottomContainer: {
-    marginBottom: 30,
+    // marginBottom removed for better bottom alignment
   },
-  orText: {
-    textAlign: 'center',
-    marginBottom: 20,
-    color: '#666',
-    fontSize: 14,
-    bottom: -70,
+  bottomSection: {
+    justifyContent: 'flex-end',
+    flex: 1,
+    marginBottom: 80,
+    alignItems: 'center',
   },
   socialButtonsContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    bottom: -90,
+    width: '100%',
   },
   socialButton: {
-    width: 100,
-    height: 48,
+    height: 50,
     borderRadius: 30,
     backgroundColor: '#f1f1f1',
-    alignItems: 'center',
+    paddingHorizontal: 20,
     justifyContent: 'center',
-    marginHorizontal: 10,
     borderWidth: 2,
     borderColor: '#000',
+    marginHorizontal: 10,
+    width: '90%',
+    alignSelf: 'center',
+  },
+  socialContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
   },
   socialIcon: {
-    width: 30,
-    height: 30,
+    width: 24,
+    height: 24,
     resizeMode: 'contain',
+    marginRight: 12,
+  },
+  socialText: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#000',
   },
   registerContainer: {
     flexDirection: 'row',
@@ -223,12 +268,10 @@ const styles = StyleSheet.create({
   registerText: {
     fontSize: 14,
     color: '#666',
-    bottom : 80
   },
   registerLink: {
     fontSize: 14,
     color: '#007AFF',
     fontWeight: '500',
-    bottom: 80,
   },
 });

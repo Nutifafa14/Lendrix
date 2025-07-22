@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Pressable, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import ScreenWrapper from '../components/ScreenWrapper';
 
 export default function ResetPasswordScreen() {
   const navigation = useNavigation();
@@ -12,27 +13,22 @@ export default function ResetPasswordScreen() {
       alert('Please enter your email address');
       return;
     }
-    // Here you would typically send the email to your backend for password reset
     console.log('Reset password for:', email);
     navigation.navigate('ResetPasswordEmailScreen', { email });
   };
 
   return (
-    <View style={styles.container}>
-     
+    <ScreenWrapper>
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
         <Ionicons name="arrow-back" size={24} color="#000" />
       </TouchableOpacity>
 
-     
       <Text style={styles.title}>Reset Password</Text>
 
-      
       <Text style={styles.description}>
         Enter the email address you signed up with. We’ll send you an email in order to let you choose a new password.
       </Text>
 
-     
       <Text style={styles.label}>Your Email</Text>
       <TextInput
         style={styles.input}
@@ -42,10 +38,11 @@ export default function ResetPasswordScreen() {
         keyboardType="email-address"
         autoCapitalize="none"
       />
-     <Pressable style={styles.resetButton} onPress={handleReset}>
+
+      <Pressable style={styles.resetButton} onPress={handleReset}>
         <Text style={styles.resetButtonText}>Reset password</Text>
       </Pressable>
-    </View>
+    </ScreenWrapper>
   );
 }
 
@@ -92,7 +89,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 18,
   },
-   resetButton: {
+  resetButton: {
     backgroundColor: '#7DEFFF',
     borderRadius: 30,
     paddingVertical: 16,

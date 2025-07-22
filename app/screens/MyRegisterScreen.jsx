@@ -9,31 +9,78 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
+import ScreenWrapper from '../components/ScreenWrapper';
 
 export default function MyRegisterScreen({ navigation }) {
+   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState(false);
+  const [users, setUsers] = useState([]);
+  const [loadingUsers, setLoadingUsers] = useState(false);
+  const [showUsers, setShowUsers] = useState(false);
 
- const handleRegister = () => {
-  // Only allow emails ending with @gmail.com
-  if (!email || !/^[\w.+-]+@gmail\.com$/.test(email)) {
-    setEmailError(true);
-    return;
-  }
-  setEmailError(false);
-  navigation.navigate("EmailVeriScreen", { email }); // Pass email to EmailVeriScreen
-};
+  const handleRegister = async () => {
+    if (!email || !/^[\w.+-]+@gmail\.com$/.test(email)) {
+      setEmailError(true);
+      return;
+    }
+    setEmailError(false);
+    try {
+      const response = await fetch('http://10.132.134.92:3000/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email }),
+      });
+      if (!response.ok) throw new Error('Failed to register user');
+      const data = await response.json();
+      // Optionally, handle the response (e.g., show a success message)
+      navigation.navigate("EmailVeriScreen", { email, name });
+    } catch (error) {
+      console.error('Registration failed:', error);
+      // Optionally, show an error message to the user
+    }
+  };
+
+  const handleFetchUsers = async () => {
+    setLoadingUsers(true);
+    try {
+      const response = await fetch('http://localhost:3000/users');
+      const data = await response.json();
+      setUsers(data);
+      setShowUsers(true);
+    } catch (error) {
+      console.error('Error fetching users:', error);
+    } finally {
+      setLoadingUsers(false);
+    }
+  };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.content}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={30} color="black" bottom={-10} />
+    <ScreenWrapper>
+      <View style={styles.container}>
+        {/* Back Button */}
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+          <Ionicons name="arrow-back" size={30} color="black" />
         </TouchableOpacity>
 
-        <Text style={styles.title}>Enter your email address</Text>
+        {/* Title */}
+        <Text style={styles.title}>Enter your details</Text>
+
+        {/* Name Label */}
+        <Text style={styles.label}>Your  Fullname</Text>
+        {/* Name Input */}
+        <TextInput
+          placeholder="Enter your fullname"
+          value={name}
+          onChangeText={setName}
+          style={styles.input}
+          autoCapitalize="words"
+        />
+
+        {/* Label */}
         <Text style={styles.label}>Your email</Text>
 
+        {/* Input */}
         <TextInput
           placeholder="Enter your email"
           value={email}
@@ -42,8 +89,11 @@ export default function MyRegisterScreen({ navigation }) {
             setEmailError(false);
           }}
           style={[styles.input, emailError && styles.inputError]}
+          keyboardType="email-address"
+          autoCapitalize="none"
         />
 
+        {/* Error */}
         {emailError && (
           <View style={styles.errorRow}>
             <FontAwesome5
@@ -52,41 +102,40 @@ export default function MyRegisterScreen({ navigation }) {
               color="red"
               style={{ marginRight: 4 }}
             />
-            <Text style={styles.errorText}>
-              Please enter a valid email address
-            </Text>
+            <Text style={styles.errorText}>Please enter a valid Gmail address</Text>
           </View>
         )}
-      </View>
 
-      <View style={styles.footer}>
-        <TouchableOpacity
-          style={[styles.button, !email && styles.buttonDisabled]}
-          onPress={handleRegister}
-          disabled={!email}
-        >
-          <Text style={styles.buttonText}>Continue</Text>
-        </TouchableOpacity>
+        {/* Button */}
+        <View style={{ marginTop: 200 }}>
+  <TouchableOpacity
+            style={[styles.button, (!email || !name) && styles.buttonDisabled]}
+            onPress={handleRegister}
+            disabled={!email || !name}
+          >
+            <Text style={styles.buttonText}>Continue</Text>
+          </TouchableOpacity>
 
-        <Text style={styles.termsText}>
-          By registering, you accept our{" "}
-          <Text
-            style={styles.link}
-            onPress={() => Linking.openURL("https://example.com/terms")}
-          >
-            Terms of Use
-          </Text>{" "}
-          and{" "}
-          <Text
-            style={styles.link}
-            onPress={() => Linking.openURL("https://example.com/privacy")}
-          >
-            Privacy Policy
-          </Text>
-          .
-        </Text>
+  <Text style={styles.termsText}>
+    By registering, you accept our{" "}
+    <Text
+      style={styles.link}
+      onPress={() => Linking.openURL("https://example.com/terms")}
+    >
+      Terms of Use
+    </Text>{" "}
+    and{" "}
+    <Text
+      style={styles.link}
+      onPress={() => Linking.openURL("https://example.com/privacy")}
+    >
+      Privacy Policy
+    </Text>.
+  </Text>
+</View>
+
       </View>
-    </View>
+    </ScreenWrapper>
   );
 }
 
@@ -94,39 +143,35 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
-    padding: 24,
-    justifyContent: "space-between",
-  },
-
-  content: {
-    flexGrow: 1,
+    justifyContent: "flex-start",
+    alignItems: "stretch",
   },
 
   title: {
     fontSize: 28,
     fontWeight: "bold",
-    marginBottom: 24,
-    marginTop: 24,
-    bottom:20
+    marginBottom: 16,
+    marginTop: 32,
+    textAlign: "left",
   },
 
   label: {
     fontSize: 16,
     color: "#555",
-    bottom: 10,
+    marginBottom: 8,
+    marginTop: 8,
   },
 
   input: {
     borderWidth: 2,
     borderColor: "#000",
     height: 48,
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    marginTop: 8,
+    width:"100%",  
+    borderRadius: 30,
+    paddingHorizontal: 24,
     marginBottom: 16,
-    paddingVertical: 10,
-    borderRadius: 20,
-    bottom: -40,
+    fontSize: 16,
+    backgroundColor: "#fff",
   },
 
   inputError: {
@@ -137,17 +182,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 12,
-    bottom: -40,
   },
 
   errorText: {
     color: "red",
     fontSize: 12,
-    bottom: -1,
-  },
-
-  footer: {
-    paddingVertical: 16,
+    marginLeft: 4,
   },
 
   button: {
@@ -155,8 +195,11 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     borderRadius: 25,
     alignItems: "center",
-    marginBottom: 12,
-    bottom: 50,
+    marginBottom: 16,
+    marginTop: 8,
+    width: "100%",
+    paddingHorizontal: 24,
+    
   },
 
   buttonDisabled: {
@@ -164,20 +207,26 @@ const styles = StyleSheet.create({
   },
 
   buttonText: {
-    color: "black",
-    fontSize: 20,
+    color: '#000',
+    fontWeight: 'bold',
+    fontSize: 16,
   },
 
   termsText: {
     fontSize: 12,
     color: "#555",
     textAlign: "center",
-    bottom:50
+    marginTop: 24,
+    marginBottom: 8,
   },
 
   link: {
     color: "#69DDF1",
     fontWeight: "bold",
     textDecorationLine: "underline",
+  },
+  backButton: {
+    marginTop: 30,
+    marginLeft: 10,
   },
 });

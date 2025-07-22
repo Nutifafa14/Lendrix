@@ -2,12 +2,13 @@ import React from 'react';
 import { View, Text, Image, StyleSheet, Pressable, TextInput } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
+import ScreenWrapper from '../components/ScreenWrapper';
 
 const ChangeNumberScreen = () => {
   const navigation = useNavigation();
 
   return (
-    <View style={styles.container}>
+    <ScreenWrapper>
       {/* Close Button */}
       <Pressable style={styles.closeButton} onPress={() => navigation.goBack()}>
         <Ionicons name="close" size={28} color="#000" />
@@ -15,7 +16,7 @@ const ChangeNumberScreen = () => {
 
       {/* Illustration */}
       <Image
-        source={require('../assets/Group_11.png')} // update path if your image is in a different folder
+        source={require('../assets/Group_11.png')}
         style={styles.image}
         resizeMode="contain"
       />
@@ -36,33 +37,24 @@ const ChangeNumberScreen = () => {
       <Pressable style={styles.primaryButton} onPress={() => {/* handle send email */}}>
         <Text style={styles.primaryButtonText}>Send email</Text>
       </Pressable>
-
-      
-    </View>
+    </ScreenWrapper>
   );
 };
 
 export default ChangeNumberScreen;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 24,
-    backgroundColor: '#fff',
-    justifyContent: 'flex-start',
-  },
   closeButton: {
-    position: 'absolute',
-    top: 20,
-    left: 20,
-    zIndex: 10,
+    alignSelf: 'flex-start',
     padding: 8,
+    backgroundColor: '#f2f2f2',
+    borderRadius: 20,
+    marginBottom: 20,
   },
   image: {
     width: '100%',
     height: 260,
     alignSelf: 'center',
-    marginTop: 60,
     marginBottom: 30,
   },
   heading: {
@@ -87,30 +79,23 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   primaryButton: {
-    alignSelf: 'center',
     backgroundColor: '#7DEFFF',
-    paddingVertical: 16,
-    paddingHorizontal: 60,
+    paddingVertical: 18,
+    paddingHorizontal: 20,
     borderRadius: 30,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.15,
     shadowRadius: 4,
     elevation: 5,
-    
+    width: '100%',
+    marginTop: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   primaryButtonText: {
     color: '#000',
     fontWeight: '600',
     fontSize: 16,
-
- contactLink: {
-    color: '#007AFF',
-    textAlign: 'center',
-    marginTop: 28,
-    fontSize: 15,
-    textDecorationLine: 'underline',
-    fontWeight: '500',
-  },
   },
 });
